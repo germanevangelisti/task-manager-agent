@@ -22,8 +22,43 @@ backend/
 │   ├── database.py   # Database configuration
 │   └── main.py       # Application entry point
 ├── docker-compose.yml # Docker configuration
+├── .env              # Environment variables (not in git)
 └── requirements.txt   # Python dependencies
 ```
+
+## Environment Configuration
+
+The application requires a `.env` file in the root of the backend directory. Create this file with the following structure:
+
+```env
+# Database Configuration
+POSTGRES_USER=your_postgres_username
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_DB=taskmanager
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+# Database URL (used by SQLAlchemy)
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+
+# AI Configuration
+LM_STUDIO_URL=http://127.0.0.1:1234/v1/chat/completions
+
+# Application Configuration
+APP_HOST=0.0.0.0
+APP_PORT=8000
+DEBUG=True
+
+# Security
+SECRET_KEY=your-secret-key-here
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+### Important Notes:
+1. The `.env` file is not tracked by git for security reasons
+2. You must create this file manually before running the application
+3. Replace the placeholder values with your actual configuration
+4. The `DATABASE_URL` is automatically constructed from the individual PostgreSQL variables
 
 ## API Endpoints
 
@@ -50,23 +85,17 @@ backend/
    pip install -r requirements.txt
    ```
 
-3. Start PostgreSQL with Docker:
+3. Create and configure the `.env` file as described above
+
+4. Start PostgreSQL with Docker:
    ```bash
    docker-compose up -d
    ```
 
-4. Run the application:
+5. Run the application:
    ```bash
    uvicorn app.main:app --reload
    ```
-
-## Environment Variables
-
-Create a `.env` file with the following variables:
-```
-DATABASE_URL=postgresql://postgres:admin123@localhost:5432/taskmanager
-LM_STUDIO_URL=http://127.0.0.1:1234/v1/chat/completions
-```
 
 ## Development
 
